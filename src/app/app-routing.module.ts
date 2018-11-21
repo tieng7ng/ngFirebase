@@ -1,11 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-
-import { AppRoutingModule } from './app-routing.module';
-
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { Routes, RouterModule } from '@angular/router';
 
 //=====
 // components
@@ -27,25 +21,21 @@ import { AuthService } from './services/auth.service';
 
 // services
 //=====
+const appRoutes: Routes = [
+  { path: 'auth/signup', component: SignupComponent },
+  { path: 'auth/signin', component: SigninComponent },
+  { path: 'books', component: BookListComponent },
+  { path: 'books/new', component: BookFormComponent },
+  { path: 'books/view/:id', component: SingleBookComponent }
+];
+
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SignupComponent,
-    SigninComponent,
-    BookListComponent,
-    SingleBookComponent,
-    BookFormComponent,
-    HeaderComponent,
-  ],
-  imports: [
-    AppRoutingModule,
-    BrowserModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule
-  ],
-  providers: [AuthGuardService, AuthService],
-  bootstrap: [AppComponent]
+  imports: [RouterModule.forRoot(
+    appRoutes,
+    { enableTracing: true } // tracer les ROUTES
+  )],
+  exports: [RouterModule]
 })
-export class AppModule { }
+
+export class AppRoutingModule { }

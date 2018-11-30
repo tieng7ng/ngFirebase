@@ -18,8 +18,11 @@ export class BookListComponent implements OnInit/* OnDestroy*/ {
   constructor(private booksService: BooksService, private router: Router) { }
 
   ngOnInit() {
-    this.booksSubscription = this.booksService.booksSubject.subscribe(
+    console.log('>>>> book-list');
+
+    this.booksSubscription = this.booksService.getBooks().subscribe(
       (books: Book[]) => {
+        console.log(books);
         this.books = books;
       }
     );
@@ -30,14 +33,14 @@ export class BookListComponent implements OnInit/* OnDestroy*/ {
     this.router.navigate(['/books', 'new']);
   }
 
-  onDeleteBook(book: Book) {
-    this.booksService.removeBook(book);
+  onDeleteBook(id: string) {
+    this.booksService.deleteBook(id);
   }
 
   onViewBook(id: number) {
     this.router.navigate(['/books', 'view', id]);
   }
-  
+
   ngOnDestroy() {
     this.booksSubscription.unsubscribe();
   }

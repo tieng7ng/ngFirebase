@@ -27,6 +27,7 @@ const appRoutes: Routes = [
   { path: 'books', component: BookListComponent, canActivate: [AuthGuardService] },
   { path: 'books/new', component: BookFormComponent, canActivate: [AuthGuardService] },
   { path: 'books/view/:id', component: SingleBookComponent, canActivate: [AuthGuardService] },
+  { path: 'books/edit/:id', component: BookFormComponent, canActivate: [AuthGuardService] },
   { path: '', redirectTo: 'books', pathMatch: 'full' },
   { path: '**', redirectTo: 'books' }
 ];

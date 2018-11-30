@@ -1,25 +1,30 @@
 <div class="row">
   <div class="col-sm-8 col-sm-offset-2">
-    <h2>Enregistrer un nouveau livre</h2>
+
+    <h2 *ngIf="id; else createBook">
+        Modifier livre
+    </h2>
+
+    <ng-template #createBook>
+      <h2>Enregistrer un nouveau livre</h2>
+    </ng-template>
+
+
     <form [formGroup]="bookForm" (ngSubmit)="onSaveBook()">
       <div class="form-group">
         <label for="title">Titre</label>
-        <input type="text" id="title"
-               class="form-control" formControlName="title">
+        <input type="text" id="title" class="form-control" formControlName="title">
       </div>
       <div class="form-group">
-        <label for="author">Auteur</label>
-        <input type="text" id="author"
-               class="form-control" formControlName="author">
+        <label for="description">Description</label>
+        <input type="text" id="description" class="form-control" formControlName="description">
       </div>
       <div class="form-group">
         <label for="synopsis">Synopsis</label>
-        <textarea id="synopsis"
-                  class="form-control" formControlName="synopsis">
+        <textarea id="synopsis" class="form-control" formControlName="synopsis">
         </textarea>
       </div>
-      <button class="btn btn-success" [disabled]="bookForm.invalid"
-              type="submit">Enregistrer
+      <button class="btn btn-success" [disabled]="bookForm.invalid" type="submit">Enregistrer
       </button>
 
     </form>

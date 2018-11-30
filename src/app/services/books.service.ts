@@ -2,85 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Book } from '../models/book.model';
 
-import * as firebase from 'firebase';
-
-import DataSnapshot = firebase.database.DataSnapshot;
-
-@Injectable({
-  providedIn: 'root'
-})
-
-export class BooksService {
-  books: Book[] = [];
-  booksSubject = new Subject<Book[]>();
-
-  constructor() {
-    this.getBooks();
-  }
-
-  emitBooks() {
-    this.booksSubject.next(this.books);
-  }
-
-  getBooks() {
-    console.log('==== getBooks');
-    firebase.database().ref('/books')
-      .on('value', (data: DataSnapshot) => {
-        this.books = data.val() ? data.val() : [];
-        this.emitBooks();
-      }
-      );
-  }
-
-  getSingleBook(id: number) {
-    return new Promise(
-      (resolve, reject) => {
-        firebase.database().ref('/books/' + id).once('value').then(
-          (data: DataSnapshot) => {
-            resolve(data.val());
-          }, (error) => {
-            reject(error);
-          }
-        );
-      }
-    );
-  }
-
-  saveBooks() {
-    console.log('>>> saveBOOK');
-    console.log(this.books);
-    firebase.database().ref('/books').set(this.books);
-    console.log('<<< saveBOOK');
-  }
-
-  createNewBook(newBook: Book) {
-    console.log('>>> create book');
-    this.books.push(newBook);
-    this.saveBooks();
-    console.log('<<< create book');
-    this.emitBooks();
-  }
-
-  removeBook(book: Book) {
-    const bookIndexToRemove = this.books.findIndex(
-      (bookEl) => {
-        if(bookEl === book) {
-          return true;
-        }
-      }
-    );
-    this.books.splice(bookIndexToRemove, 1);
-    this.saveBooks();
-    this.emitBooks();
-  }
-}
-
-
-/*
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { Book } from '../models/book.model';
-
+import { Observable } from 'rxjs';
 import * as firebase from 'firebase';
 import DataSnapshot = firebase.database.DataSnapshot;
 
@@ -92,77 +14,81 @@ export class BooksService {
   books: Book[] = [];
   booksSubject = new Subject<Book[]>();
 
+  ref = firebase.firestore().collection('books');
+
   constructor() {
     this.getBooks();
   }
 
   emitBooks() {
+    console.log('>>> emitBooks');
+    console.log(this.booksSubject);
     this.booksSubject.next(this.books);
+    console.log(this.booksSubject);
   }
 
-  getBooks() {
-    console.log('==== getBooks');
-    firebase.database().ref('/books')
-      .on('value', (data: DataSnapshot) => {
-        this.books = data.val() ? data.val() : [];
-        this.emitBooks();
-      }
-      );
+  getBooks(): Observable<any> {
+    return new Observable((observer) => {
+      this.ref.onSnapshot((querySnapshot) => {
+        let books = [];
+        querySnapshot.forEach((doc) => {
+          let data = doc.data();
+          console.log(data, doc);
+          books.push({
+            key: doc.id,
+            title: data.title,
+            description: data.description,
+            synopsis: data.synopsis
+          });
+        });
+        observer.next(books);
+      });
+    });
   }
 
-  getSingleBook(id: number) {
-    return new Promise(
-      (resolve, reject) => {
-        firebase.database().ref('/books/' + id).once('value').then(
-          (data: DataSnapshot) => {
-            resolve(data.val());
-          }, (error) => {
-            reject(error);
-          }
-        );
-      }
-    );
+  getSingleBook(id: string): Observable<any> {
+    return new Observable((observer) => {
+      this.ref.doc(id).get().then((doc) => {
+        let data = doc.data();
+        
+        console.log('===== getSingleBook', id, data);
+        observer.next({
+          key: doc.id,
+          title: data.title,
+          description: data.description,
+          synopsis: data.synopsis
+      });
+      });
+    });
   }
 
-  saveBooks() {
-    console.log('>>> saveBOOK');
-    console.log(this.books);
-    firebase.database().ref('/books').set(this.books);
-    console.log('<<< saveBOOK');
+  saveBooks(id: string, book: Book): Observable<any> {
+    console.log('>>> saveBook', book);
+    var data = JSON.parse(JSON.stringify(book));
+    return new Observable((observer) => {
+      this.ref.doc(id).set(data).then(() => {
+        observer.next();
+      });
+    });
   }
 
-  createNewBook(newBook: Book) {
-    console.log('>>> create book');
-    this.books.push(newBook);
-    this.saveBooks();
-    console.log('<<< create book');
-    this.emitBooks();
+  createNewBook(newBook: Book): Observable<any> {
+    console.log('>>> createNewBook', newBook);
+    var data = JSON.parse(JSON.stringify(newBook));
+    return new Observable((observer) => {
+      this.ref.add(data).then((doc) => {
+        observer.next({
+          key: doc.id,
+        });
+      });
+    });
   }
 
-  removeBook(book: Book) {
-    const bookIndexToRemove = this.books.findIndex(
-      (bookEl) => {
-        if(bookEl === book) {
-          return true;
-        }
-      }
-    );
-    this.books.splice(bookIndexToRemove, 1);
-    this.saveBooks();
-    this.emitBooks();
+  deleteBook(id: string): Observable<{}> {
+    return new Observable((observer) => {
+      this.ref.doc(id).delete().then(() => {
+        observer.next();
+      });
+    });
   }
 }
-
-
-/*
-@Injectable()
-export class BooksService {
-
-  books: Book[] = [];
-  booksSubject = new Subject<Book[]>();
-
-  emitBooks() {
-    this.booksSubject.next(this.books);
-  }
-}
-*/

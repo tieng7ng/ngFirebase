@@ -11,24 +11,36 @@ export class AuthService {
 
 
   createNewUser(email: string, password: string) {
+    //=====
+    // promise
     return new Promise(
       (resolve, reject) => {
+        //=====
+        // then
         firebase.auth().createUserWithEmailAndPassword(email, password).then(
           () => {
             resolve();
           },
           (error) => {
-            console.log('createNewUser '+error);
+            console.log('createNewUser ' + error);
             reject(error);
           }
         );
+        // then
+        //=====
       }
     );
+    // promise
+    //=====
   }
 
   signInUser(email: string, password: string) {
+    //=====
+    // promise
     return new Promise(
       (resolve, reject) => {
+        //=====
+        // then
         firebase.auth().signInWithEmailAndPassword(email, password).then(
           () => {
             resolve();
@@ -37,8 +49,13 @@ export class AuthService {
             reject(error);
           }
         );
+        // then
+        //=====
       }
     );
+    // promise
+    //=====
+
   }
 
   signOutUser() {

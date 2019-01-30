@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { NGXLogger } from 'ngx-logger';
+
 import { Book } from '../models/book.model';
 
 import { Observable } from 'rxjs';
@@ -16,12 +18,14 @@ export class BooksService {
 
   ref = firebase.firestore().collection('books');
 
-  constructor() {
+  constructor(
+    private logger: NGXLogger,
+  ) {
     this.getBooks();
   }
 
   emitBooks() {
-    console.log('>>> emitBooks');
+    this.logger.debug('>>> emitBooks');
     console.log(this.booksSubject);
     this.booksSubject.next(this.books);
     console.log(this.booksSubject);
@@ -67,13 +71,13 @@ export class BooksService {
     var data = JSON.parse(JSON.stringify(book));
     return new Observable((observer) => {
       this.ref.doc(id).set(data).then(() => {
-        observer.next();
+        observer.next(data);
       });
     });
   }
 
   createNewBook(newBook: Book): Observable<any> {
-    console.log('>>> createNewBook', newBook);
+    this.logger.debug('>>> createNewBook', newBook);
     var data = JSON.parse(JSON.stringify(newBook));
     return new Observable((observer) => {
       this.ref.add(data).then((doc) => {

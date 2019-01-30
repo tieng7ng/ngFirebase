@@ -11,12 +11,20 @@ export class HeaderComponent implements OnInit {
 
   isAuth: boolean;
 
-  constructor(private authService: AuthService) { }
+  // display email in heander
+  private emailCurrent:string;
+
+  constructor(
+    private authService: AuthService
+  ) {
+
+  }
 
   ngOnInit() {
     firebase.auth().onAuthStateChanged(
       (user) => {
-        if(user) {
+        if (user) {
+          this.emailCurrent = user.email;
           this.isAuth = true;
         } else {
           this.isAuth = false;
@@ -27,6 +35,7 @@ export class HeaderComponent implements OnInit {
 
   onSignOut() {
     this.authService.signOutUser();
+    this.emailCurrent = '';
   }
 
 }

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NGXLogger } from 'ngx-logger';
+
 import { Book } from '../../models/book.model';
 import { BooksService } from '../../services/books.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,7 +16,9 @@ export class BookFormComponent implements OnInit {
   bookForm: FormGroup;
   id: string;
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(
+    private logger: NGXLogger,
+    private formBuilder: FormBuilder,
     private booksService: BooksService,
     private router: Router,
     private route: ActivatedRoute) { }
@@ -55,15 +59,19 @@ export class BookFormComponent implements OnInit {
     if (this.id) {
       //=====
       // MAJ
-      console.log('>>> onSave', newBook);
+      this.logger.debug('>>> onSave', newBook);
+
 
       this.booksService.saveBooks(this.id, newBook)
-        .subscribe( res => {
-          console.log(res);
-          this.router.navigate(['/boards']);
-        }, (err) => {
-          console.log(err);
-        });
+        .subscribe(
+          res => {
+            this.logger.debug('>>> save', res);
+            this.router.navigate(['/boards']);
+          },
+          (err) => {
+            this.logger.debug(err);
+          }
+        );
 
       this.router.navigate(['/books']);
       // MAJ
@@ -73,6 +81,8 @@ export class BookFormComponent implements OnInit {
       // ADD
       this.booksService.createNewBook(newBook)
         .subscribe(res => {
+          this.logger.debug(res);
+
           //        let id = res['key'];
           this.router.navigate(['/boards']);
         }, (err) => {

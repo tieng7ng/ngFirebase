@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 //=====
 // components
@@ -40,7 +40,10 @@ import { AuthService } from './services/auth.service';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    LoggerModule.forRoot({
+      level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR
+    })
   ],
   providers: [AuthGuardService, AuthService],
   bootstrap: [AppComponent]

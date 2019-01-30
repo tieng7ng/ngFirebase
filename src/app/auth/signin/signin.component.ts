@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NGXLogger } from 'ngx-logger';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
@@ -13,9 +14,12 @@ export class SigninComponent implements OnInit {
   signinForm: FormGroup;
   errorMessage: string;
 
-  constructor(private formBuilder: FormBuilder,
-              private authService: AuthService,
-              private router: Router) { }
+  constructor(
+    private logger: NGXLogger,
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.initForm();
@@ -31,10 +35,10 @@ export class SigninComponent implements OnInit {
   onSubmit() {
     const email = this.signinForm.get('email').value;
     const password = this.signinForm.get('password').value;
-    
+
     this.authService.signInUser(email, password).then(
       () => {
-        console.log('>> connexion');
+        this.logger.debug('>> connexion');
         this.router.navigate(['/books']);
       },
       (error) => {

@@ -85,9 +85,11 @@ export class BookFormComponent implements OnInit {
 
           //        let id = res['key'];
           this.router.navigate(['/boards']);
-        }, (err) => {
-          console.log(err);
-        });
+        },
+          (err) => {
+            console.log(err);
+          }
+        );
 
       this.router.navigate(['/books']);
       // ADD

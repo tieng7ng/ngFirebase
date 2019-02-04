@@ -20,7 +20,9 @@ export class AppComponent {
       storageBucket: "firstproject-998a2.appspot.com",
       messagingSenderId: "43949308687"
     };
-    firebase.initializeApp(config);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(config);
+    }
   }
 
 }

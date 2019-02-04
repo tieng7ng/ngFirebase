@@ -1,4 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { BookFormComponent } from './book-form.component';
 
@@ -8,9 +12,19 @@ describe('BookFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BookFormComponent ]
+      imports: [
+        LoggerModule.forRoot({
+          level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR
+        }),
+        FormsModule,
+        ReactiveFormsModule,
+        RouterTestingModule
+      ],
+      declarations: [
+        BookFormComponent,
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -10,9 +10,10 @@ import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { AppComponent } from './app.component';
 import { SignupComponent } from './auth/signup/signup.component';
 import { SigninComponent } from './auth/signin/signin.component';
+import { BookFormComponent } from './book-list/book-form/book-form.component';
 import { BookListComponent } from './book-list/book-list.component';
 import { SingleBookComponent } from './book-list/single-book/single-book.component';
-import { BookFormComponent } from './book-list/book-form/book-form.component';
+import { ReservationListComponent } from './reservation/reservation-list.component';
 import { HeaderComponent } from './header/header.component';
 // components
 //=====
@@ -34,7 +35,8 @@ import { AuthService } from './services/auth.service';
     BookListComponent,
     SingleBookComponent,
     BookFormComponent,
-    HeaderComponent
+    HeaderComponent,
+    ReservationListComponent
   ],
   imports: [
     BrowserModule,

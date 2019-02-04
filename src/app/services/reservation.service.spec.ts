@@ -1,20 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
-import { BooksService } from './books.service';
+import { ReservationService } from './reservation.service';
 
-describe('BooksService', () => {
+describe('ReservationService', () => {
   beforeEach(() => TestBed.configureTestingModule({
     imports: [
       LoggerModule.forRoot({
         level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR
       })
     ],
-
   }));
 
   it('should be created', () => {
-    const service: BooksService = TestBed.get(BooksService);
+    const service: ReservationService = TestBed.get(ReservationService);
     expect(service).toBeTruthy();
   });
 });

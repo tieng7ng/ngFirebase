@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
+
 import { Book } from '../../models/book.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BooksService } from '../../services/books.service';
+import { ReservationService } from '../../services/reservation.service';
 
 @Component({
   selector: 'app-single-book',
@@ -13,7 +16,11 @@ export class SingleBookComponent implements OnInit {
   book: Book;
   id: string;
 
-  constructor(private route: ActivatedRoute, private booksService: BooksService,
+  constructor(
+    private logger: NGXLogger,
+    private route: ActivatedRoute,
+    private booksService: BooksService,
+    private reservationService: ReservationService,
     private router: Router) { }
 
   ngOnInit() {
@@ -36,18 +43,24 @@ export class SingleBookComponent implements OnInit {
     this.router.navigate(['/books', 'edit', this.id]);
   }
 
-
   onDelete() {
     console.log('==== DELETE');
     this.booksService.deleteBook(this.id)
-    .subscribe(res => {
-      //        let id = res['key'];
-      this.router.navigate(['/boards']);
-    }, (err) => {
-      console.log(err);
-    });
+      .subscribe(res => {
+        //        let id = res['key'];
+        this.router.navigate(['/boards']);
+      }, (err) => {
+        console.log(err);
+      });
 
-  this.router.navigate(['/books']);
+    this.router.navigate(['/books']);
+  }
+
+  onReserve() {
+    this.reservationService.addBook(this.book);
+    this.logger.debug('[single-book component] onReserve');
+    this.logger.debug(
+      this.reservationService.reservation);
   }
 
 

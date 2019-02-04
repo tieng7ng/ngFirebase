@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { SingleBookComponent } from './single-book.component';
 
@@ -8,9 +10,17 @@ describe('SingleBookComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SingleBookComponent ]
+      imports: [
+        LoggerModule.forRoot({
+          level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR
+        }),
+        RouterTestingModule
+      ],
+      declarations: [
+        SingleBookComponent,
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
